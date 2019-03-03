@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.db.sys.dao.SysGoodsDao">
+
+	<resultMap id="sysUserMap" type="com.db.sys.entity.SysGoods">
+	</resultMap>
+
+	<sql id="queryWhereId">
+		<where>
+			(youxi_name=#{youxi_name} and shangpin_zhuangtai=#{shangpin_zhuangtai})
+			and (youxi_qufu like concat("%",#{youxi_qufu},"%")
+			and shangpin_type like concat("%",#{shangpin_type},"%")
+			and youxi_zhanghao like concat("%",#{youxi_zhanghao},"%"))
+		</where>
+	</sql>
+
+	<!-- 查询所有 -->
+	<select id="findPageObjects" resultMap="sysUserMap">
+		select * from sys_shangpin
+		<include refid="queryWhereId"></include>
+		order by youxi_dengji desc
+		limit #{startIndex},#{pageSize}
+	</select>
+	<select id="findPageObjectsOrderByjiageDesc" resultMap="sysUserMap">
+		select * from sys_shangpin
+		<include refid="queryWhereId"></include>
+		order by shangpin_jiage desc
+		limit #{startIndex},#{pageSize}
+	</select>
+	<select id="findPageObjectsOrderByjiageAsc" resultMap="sysUserMap">
+		select * from sys_shangpin
+		<include refid="queryWhereId"></include>
+		order by shangpin_jiage asc
+		limit #{startIndex},#{pageSize}
+	</select>
+	<select id="getRowCount" resultType="int">
+		select count(*) from sys_shangpin
+		<include refid="queryWhereId"></include>
+	</select>
+	
+	<insert id="insertObject">
+		insert into sys_dingdan(user_id,shangpin_id) values(#{user_id},#{shangpin_id})
+	</insert>
+
+	<select id="findGamenames" resultType="com.db.sys.entity.SysGoods">
+		select distinct youxi_name from sys_shangpin
+	</select>
+
+	<select id="findGamequfus" resultType="com.db.sys.entity.SysGoods">
+		select distinct youxi_qufu from sys_shangpin where youxi_name=#{youxi_name}
+	</select>
+</mapper>
+
+
+

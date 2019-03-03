@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.db.sys.dao.SysXiajiaDao">
+	<!-- 查询所有 -->
+	<select id="findPageObjects" resultType="com.db.sys.entity.SysShangpin">
+		select * from sys_shangpin
+		<where>
+			shangpin_zhuangtai='已下架'
+		</where>
+		order by goumai_time desc
+		limit #{startIndex},#{pageSize}
+	</select>
+	<select id="getRowCount" resultType="int">
+		select count(*) from sys_shangpin 
+		<where>
+			shangpin_zhuangtai='已下架'
+		</where>
+	</select>
+	
+	<!-- 根据名字查询单个 -->
+	<select id="findPageObject" resultType="com.db.sys.entity.SysShangpin">
+		select * from sys_shangpin
+		<include refid="queryWhereId"></include>
+		order by goumai_time desc
+		limit #{startIndex},#{pageSize}
+	</select>
+	<select id="getRowCount1" resultType="int">
+		select count(*)
+		from sys_shangpin
+		<include refid="queryWhereId"></include>
+	</select>
+	<!-- 借助此元素对共性数据进行提取 -->
+	<sql id="queryWhereId">
+		<where>
+				goumai_name like concat("%",#{shangjia_name},"%")
+				and shangpin_zhuangtai='已下架'
+		</where>
+	</sql>
+	<!-- 基于id删除日志记录 -->
+	<delete id="deleteObjcts">
+		delete from sys_shangpin
+		<where>
+			id in
+			<foreach collection="ids" open="(" close=")" separator="," item="id">
+			#{id}
+			</foreach>
+		</where>
+	</delete>
+</mapper>
+
+
+

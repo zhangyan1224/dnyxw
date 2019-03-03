@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.db.sys.dao.SysCartDao">
+    <select id="findShangpinIdsByUserId" resultType="int">
+		select shangpin_id from sys_dingdan where user_id=#{user_id}
+		order by jiaru_time asc
+	</select>
+
+
+    <select id="finObjectByShangpinIds" resultType="com.db.sys.entity.SysShangpin">
+		select * from sys_shangpin where id in
+		<foreach collection="shangpin_ids" open="(" close=")" separator=","  item="item">
+			#{item}
+		</foreach>
+		and youxi_name=#{youxi_name}
+		and (youxi_qufu like concat("%",#{youxi_qufu},"%")
+		and shangpin_type like concat("%",#{shangpin_type},"%"))
+		limit #{startIndex},#{pageSize}
+	</select>
+
+    <delete id="deleteObject">
+         delete from sys_dingdan where user_id=#{user_id} and shangpin_id=#{shangpin_id}
+    </delete>
+    
+    <insert id="doTianjiaById">
+    	insert into sys_dingdan(user_id,shangpin_id,jiaru_time) values(#{user_id},#{id},now())
+    </insert>
+    <select id="findGamenames" resultType="com.db.sys.entity.SysShangpin">
+		select distinct youxi_name from sys_shangpin
+	</select>
+
+	<select id="findGamequfus" resultType="com.db.sys.entity.SysShangpin">
+		select distinct youxi_qufu from sys_shangpin where youxi_name=#{youxi_name}
+	</select>
+</mapper>
+
+
+

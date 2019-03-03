@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.db.sys.dao.SysAccountDao">
+	<!-- 查询商品信息 -->
+	<select id="findPageObjects" resultType="com.db.sys.entity.SysShangpin">
+		select * from sys_shangpin
+		<where>
+			(youxi_name=#{youxi_name} and shangjia_name=#{username} and shangpin_zhuangtai='已上架') and (youxi_qufu like concat("%",#{youxi_qufu},"%") and shangpin_type like concat("%",#{shangpin_type},"%") and youxi_zhanghao like concat("%",#{youxi_zhanghao},"%"))
+		</where>
+		order by goumai_time desc
+		limit #{startIndex},#{pageSize}
+	</select>
+	<!-- 查询记录数 -->
+	<select id="getRowCount" resultType="int">
+		select count(*)
+		from sys_shangpin
+		<where>
+			youxi_name=#{youxi_name}
+			and
+			shangpin_type=#{shangpin_type}
+			and
+			shangjia_name=#{shangjia_name}
+			and
+			shangpin_zhuangtai=#{shangpin_zhuangtai}
+		</where>
+	</select>
+	<!-- 增添商品信息 -->
+	<insert id="insertObject" parameterType="com.db.sys.entity.SysAccount">
+		insert into
+		sys_shangpin(youxi_name,youxi_zhanghao,youxi_mima,youxi_qufu,youxi_dengji,
+		shangpin_count,shangpin_jiage,shangjia_name,shangjia_time,
+		shangpin_zhuangtai,shangpin_type,maijia_zhuangtai,shangjia_zhuangtai)
+		values(#{youxi_name},#{youxi_zhanghao},#{youxi_mima},#{youxi_qufu},
+		#{youxi_dengji},#{shangpin_count},#{shangpin_jiage},#{shangjia_name},
+		now(),#{shangpin_zhuangtai},#{shangpin_type},'无','无')
+	</insert>
+	<!-- 根据id查商品信息 -->
+	<select id="findObjectById" parameterType="int" resultType="com.db.sys.entity.SysAccount">
+		select *
+		from sys_shangpin
+		where id=#{id}
+	</select>
+	<update id="updateObject" parameterType="com.db.sys.entity.SysAccount">
+		update sys_shangpin
+		<set>
+			<if test="youxi_name!=null and youxi_name!=''">
+				youxi_name=#{youxi_name},
+			</if>
+			<if test="youxi_zhanghao!=null and youxi_zhanghao!=''">
+				youxi_zhanghao=#{youxi_zhanghao},
+			</if>
+			<if test="youxi_mima!=null and youxi_mima!=''">
+				youxi_mima=#{youxi_mima},
+			</if>
+			<if test="youxi_qufu!=null and youxi_qufu!=''">
+				youxi_qufu=#{youxi_qufu},
+			</if>
+			<if test="youxi_dengji!=null and youxi_dengji!=''">
+				youxi_dengji=#{youxi_dengji},
+			</if>
+			<if test="shangpin_count!=null and shangpin_count!=''">
+				shangpin_count=#{shangpin_count},
+			</if>
+			<if test="shangpin_jiage!=null and shangpin_jiage!=''">
+				shangpin_jiage=#{shangpin_jiage},
+			</if>
+			<if test="shangpin_type!=null and shangpin_type!=''">
+				shangpin_type=#{shangpin_type},
+			</if>
+			shangjia_time=now()
+		</set>
+		where id=#{id}
+	</update>
+	<update id="validById">
+		update sys_shangpin
+		set
+		shangpin_zhuangtai=#{shangpin_zhuangtai}
+		where id=#{id}
+	</update>
+
+	<select id="getRowCount1" resultType="int">
+		select count(*) from sys_shangpin
+		<where>
+			(youxi_name=#{youxi_name} and shangjia_name=#{username} and shangpin_zhuangtai='已上架') and (youxi_qufu like concat("%",#{youxi_qufu},"%") and shangpin_type like concat("%",#{shangpin_type},"%") and youxi_zhanghao like concat("%",#{youxi_zhanghao},"%"))
+		</where>
+	</select>
+
+	<select id="findGamenames" resultType="com.db.sys.entity.SysShangpin">
+		select distinct youxi_name from sys_shangpin
+	</select>
+
+	<select id="findGamequfus" resultType="com.db.sys.entity.SysShangpin">
+		select distinct youxi_qufu from sys_shangpin where youxi_name=#{youxi_name}
+	</select>
+</mapper>

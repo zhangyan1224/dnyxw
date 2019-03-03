@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.db.sys.dao.SysBuyDao">
+
+	<update id="updateObject" parameterType="com.db.sys.entity.SysShangpin">
+		update sys_shangpin
+		<set>
+			<if test="goumai_name!=null and goumai_name!=''">
+				goumai_name=#{goumai_name},
+			</if>
+			<if test="shangpin_zhuangtai!=null and shangpin_zhuangtai!=''">
+				shangpin_zhuangtai='已购买',
+			</if>
+			goumai_time=now()
+		</set>
+		where id=#{id}
+	</update>
+	
+	<update id="updateUserMoneyByUserName">
+		update sys_users
+		<set>
+			<if test="money!=null and money!=''">
+				money=#{money},
+			</if>
+			modifiedTime=now()
+		</set>
+		where username=#{username}
+	</update>
+
+	<select id="findObjectById" parameterType="int" resultType="com.db.sys.entity.SysShangpin">
+		select *
+		from sys_shangpin
+		where id=#{id}
+	</select>
+
+	<select id="findObjectByUserName" resultType="com.db.sys.entity.SysUser">
+		select * from sys_users
+		where username=#{username}
+	</select>
+	
+</mapper>
